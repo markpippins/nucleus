@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -51,39 +50,6 @@ public class ServiceBroker {
         log.info("ServiceBroker initialized");
     }
 
-    // public ResponseEntity<?> invoke(ServiceRequest req) {
-    //     log.info("Invoking service: {}, operation: {}, requestId: {}", req.service(), req.operation(), req.requestId());
-    //     try {
-    //         Object bean = resolveBean(req.service());
-    //         Method method = resolveMethod(bean, req.operation());
-    //         Object[] args = bindArgs(method, req.params(), req.requestId());
-    //         Object result = method.invoke(bean, args);
-    //         if (result instanceof ResponseEntity<?> re) {
-    //             log.debug("Service returned ResponseEntity directly");
-    //             return re;
-    //         }
-    //         // Optionally wrap in your standard envelope:
-    //         log.debug("Service returned: {}", result);
-    //         return ResponseEntity.ok(ServiceResponse.ok(result, req.requestId()));
-    //     } catch (NoSuchElementException e) {
-    //         log.warn("Not found: {}", e.getMessage());
-    //         return badRequest("not_found", e.getMessage(), req.requestId());
-    //     } catch (BrokerValidationException e) {
-    //         log.warn("Validation error: {}", e.getErrors());
-    //         return ResponseEntity.badRequest().body(
-    //                 ServiceResponse.error(e.getErrors(), e.getRequestId()));
-    //     } catch (IllegalArgumentException e) {
-    //         log.warn("Binding error: {}", e.getMessage());
-    //         return badRequest("binding_error", e.getMessage(), req.requestId());
-    //     } catch (InvocationTargetException e) {
-    //         Throwable cause = e.getTargetException();
-    //         log.error("Service error: {}", cause.getMessage(), cause);
-    //         return serverError("service_error", cause.getClass().getSimpleName() + ": " + cause.getMessage(), req.requestId());
-    //     } catch (IllegalAccessException | RuntimeException e) {
-    //         log.error("Broker error: {}", e.getMessage(), e);
-    //         return serverError("broker_error", e.getMessage(), req.requestId());
-    //     }
-    // }
     public ServiceResponse<?> invoke(ServiceRequest req) {
         log.info("Invoking service: {}, operation: {}, requestId: {}",
                 req.service(), req.operation(), req.requestId());
@@ -95,9 +61,9 @@ public class ServiceBroker {
             Object result = method.invoke(bean, args);
 
             // If a service method tries to return ResponseEntity, unwrap it
-            if (result instanceof ResponseEntity<?> re) {
-                log.debug("Service returned ResponseEntity directly, unwrapping body");
-                return ServiceResponse.ok(re.getBody(), req.requestId());
+            if (result instanceof ServiceResponse<?> re) {
+                log.debug("Service returned ServiceResponse directly, unwrapping body");
+                return ServiceResponse.ok(re, req.requestId());
             }
 
             log.debug("Service returned: {}", result);
@@ -270,15 +236,16 @@ public class ServiceBroker {
         return false;
     }
 
-    private ResponseEntity<?> badRequest(String code, String msg, String requestId) {
+    private ServiceResponse<?> badRequest(String code, String msg, String requestId) {
         log.warn("Bad request [{}]: {}", code, msg);
-        return ResponseEntity.badRequest().body(ServiceResponse.error(
-                List.of(Map.of("code", code, "message", msg)), requestId));
+        return ServiceResponse.error(
+                List.of(Map.of("code", code, "message", msg)), requestId);
     }
 
-    private ResponseEntity<?> serverError(String code, String msg, String requestId) {
+    private ServiceResponse<?> serverError(String code, String msg, String requestId) {
         log.error("Server error [{}]: {}", code, msg);
-        return ResponseEntity.internalServerError().body(ServiceResponse.error(
-                List.of(Map.of("code", code, "message", msg)), requestId));
+        return ServiceResponse.error(
+                List.of(Map.of("code", code, "message", msg)), requestId);
     }
+
 }

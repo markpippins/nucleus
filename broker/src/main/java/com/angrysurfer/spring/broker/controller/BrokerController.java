@@ -27,6 +27,7 @@ public class BrokerController {
         log.info("BrokerController initialized");
     }
 
+
     @PostMapping(value = "/requestService", consumes = {"application/json"})
     public ResponseEntity<?> requestService(@RequestBody ServiceRequest request) {
         log.debug("Received request: {}", request);

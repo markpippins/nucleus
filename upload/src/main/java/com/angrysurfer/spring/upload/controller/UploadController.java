@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.angrysurfer.spring.broker.api.ServiceRequest;
+import com.angrysurfer.spring.broker.api.ServiceResponse;
 import com.angrysurfer.spring.broker.service.ServiceBroker;
 import com.angrysurfer.spring.upload.service.UploadService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,12 +55,14 @@ public class UploadController {
                 return ResponseEntity.badRequest().body("Invalid params JSON");
             }
         }
+        ServiceResponse<?> response;
 
         try {
             Path path = uploadService.saveUploadedFile(file);
             params.put("filePath", path);
             log.info("File saved at: {}", path);
-            return ResponseEntity.ok(broker.invoke(new ServiceRequest(service, operation, params, null)));
+            response = broker.invoke(new ServiceRequest(service, operation, params, null));
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
             log.error("Error saving file: {}", file.getOriginalFilename(), e);
             return ResponseEntity.badRequest().body("Error saving file");
