@@ -11,6 +11,7 @@
 
     <modules>
         <module>broker-annotations</module>
+        <module>broker-api</module>
         <module>broker</module>
         <module>boot</module>
         <module>upload</module>
