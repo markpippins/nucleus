@@ -1,11 +1,22 @@
 package com.angrysurfer.spring.social.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "Post")
 @Getter
@@ -17,16 +28,7 @@ public class Post extends AbstractContent {
 	 */
 	private static final long serialVersionUID = -6085955136753566931L;
 
-	public Post() {
-
-	}
-
-	public Post(User postedBy, User postedTo, String text) {
-		setPostedBy(postedBy);
-		setPostedTo(postedTo);
-		setText(text);
-	}
-
+	
 	@Id
 	@SequenceGenerator(name = "post_sequence", sequenceName = "post_sequence", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_sequence")
@@ -73,5 +75,16 @@ public class Post extends AbstractContent {
 			@JoinColumn(name = "post_id") })
 	@Getter
 	private Set<Reaction> reactions = new HashSet<>();
+
+	public Post() {
+
+	}
+
+	public Post(User postedBy, User postedTo, String text) {
+		this.postedBy = postedBy;
+		this.postedTo = postedTo;
+		this.setText(text);
+	}
+
 
 }

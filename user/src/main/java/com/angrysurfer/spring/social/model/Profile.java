@@ -41,4 +41,8 @@ public class Profile implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Set<Interest> interests = new HashSet<>();
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

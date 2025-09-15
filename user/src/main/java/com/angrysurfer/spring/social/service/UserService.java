@@ -1,22 +1,49 @@
 package com.angrysurfer.spring.social.service;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import com.angrysurfer.spring.ResourceNotFoundException;
+import com.angrysurfer.spring.broker.spi.BrokerOperation;
+import com.angrysurfer.spring.broker.spi.BrokerParam;
 import com.angrysurfer.spring.social.dto.UserDTO;
 import com.angrysurfer.spring.social.model.Profile;
 import com.angrysurfer.spring.social.model.User;
 import com.angrysurfer.spring.social.repository.ProfileRepository;
 import com.angrysurfer.spring.social.repository.UserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+@Service("userService")
+public class UserService {
 
-@Service
-public class UserServiceOld {
+	public record TestUser(Long id, String email, String name) {}
+    public record CreateUserReq(
+            @Email String email,
+            @NotBlank String name
+    ) {}
+
+    @BrokerOperation("getById")
+    public ResponseEntity<TestUser> getById(@BrokerParam("id") Long id) {
+        // pretend lookup
+        return ResponseEntity.ok(new TestUser(id, "user"+id+"@acme.com", "User "+id));
+    }
+
+    @BrokerOperation("create")
+    public ResponseEntity<Map<String, Object>> create(@Valid @BrokerParam("user") CreateUserReq req) {
+        // pretend persistence:
+        TestUser created = new TestUser(1001L, req.email(), req.name());
+        return ResponseEntity.ok(Map.of("created", created));
+    }
 
 	@Autowired
 	private UserRepository userRepository;

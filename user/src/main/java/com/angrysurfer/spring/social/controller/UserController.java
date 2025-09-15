@@ -3,7 +3,7 @@ package com.angrysurfer.spring.social.controller;
 import com.angrysurfer.spring.ResourceNotFoundException;
 import com.angrysurfer.spring.social.dto.ProfileDTO;
 import com.angrysurfer.spring.social.dto.UserDTO;
-import com.angrysurfer.spring.social.service.UserServiceOld;
+import com.angrysurfer.spring.social.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.Set;
 public class UserController {
 
 	@Autowired
-	private UserServiceOld userService;
+	private UserService userService;
 
 	@PostMapping(path = "/add")
 	public @ResponseBody
