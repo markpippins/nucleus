@@ -1,4 +1,4 @@
-package com.angrysurfer.spring.boot;
+package com.angrysurfer.spring;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.angrysurfer.spring.upload.web;
+package com.angrysurfer.spring.upload.controller;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.angrysurfer.spring.broker.api.ServiceRequest;
-import com.angrysurfer.spring.broker.core.ServiceBroker;
-import com.angrysurfer.spring.upload.service.FileService;
+import com.angrysurfer.spring.broker.service.ServiceBroker;
+import com.angrysurfer.spring.upload.service.UploadService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -27,11 +27,11 @@ public class UploadController {
 
     private static final Logger log = LoggerFactory.getLogger(UploadController.class);
 
-    private final FileService fileService;
+    private final UploadService uploadService;
     private final ServiceBroker broker;
 
-    public UploadController(FileService fileService, ServiceBroker broker) {
-        this.fileService = fileService;
+    public UploadController(UploadService uploadService, ServiceBroker broker) {
+        this.uploadService = uploadService;
         this.broker = broker;
         log.info("UploadController initialized");
     }
@@ -57,7 +57,7 @@ public class UploadController {
         }
 
         try {
-            Path path = fileService.saveUploadedFile(file);
+            Path path = uploadService.saveUploadedFile(file);
             params.put("filePath", path);
             log.info("File saved at: {}", path);
             return broker.invoke(new ServiceRequest(service, operation, params, null));

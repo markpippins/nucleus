@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.angrysurfer.spring.broker.spi.BrokerOperation;
-import com.angrysurfer.spring.upload.FileStorageProperties;
+import com.angrysurfer.spring.upload.config.FileStorageProperties;
 import com.angrysurfer.spring.upload.error.LogError;
 import com.angrysurfer.spring.upload.error.LogParser;
 
 @Service
-public class FileService {
+public class UploadService {
 
-    private static final Logger log = LoggerFactory.getLogger(FileService.class);
+    private static final Logger log = LoggerFactory.getLogger(UploadService.class);
 
     private final FileStorageProperties properties;
 
-    public FileService(FileStorageProperties properties) {
+    public UploadService(FileStorageProperties properties) {
         this.properties = properties;
         log.info("Initializing FileService with properties: {}", properties);
         // ensure directories exist

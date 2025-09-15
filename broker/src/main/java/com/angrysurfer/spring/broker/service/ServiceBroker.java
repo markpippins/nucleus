@@ -1,4 +1,4 @@
-package com.angrysurfer.spring.broker.core;
+package com.angrysurfer.spring.broker.service;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
