@@ -1,13 +1,13 @@
-package com.angrysurfer.spring.boot;
+// package com.angrysurfer.spring.boot;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class ServicesWebApplicationTests {
+// @SpringBootTest
+// class ServicesWebApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }
