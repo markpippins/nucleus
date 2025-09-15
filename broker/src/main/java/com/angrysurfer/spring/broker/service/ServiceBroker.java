@@ -39,7 +39,9 @@ public class ServiceBroker {
     private final ObjectMapper objectMapper;
     private final Validator validator;
 
-    private record MethodKey(String service, String operation) {}
+    private record MethodKey(String service, String operation) {
+
+    }
     private final Map<MethodKey, Method> methodCache = new ConcurrentHashMap<>();
 
     public ServiceBroker(ApplicationContext ctx, ObjectMapper objectMapper, Validator validator) {
@@ -49,8 +51,42 @@ public class ServiceBroker {
         log.info("ServiceBroker initialized");
     }
 
-    public ResponseEntity<?> invoke(ServiceRequest req) {
-        log.info("Invoking service: {}, operation: {}, requestId: {}", req.service(), req.operation(), req.requestId());
+    // public ResponseEntity<?> invoke(ServiceRequest req) {
+    //     log.info("Invoking service: {}, operation: {}, requestId: {}", req.service(), req.operation(), req.requestId());
+    //     try {
+    //         Object bean = resolveBean(req.service());
+    //         Method method = resolveMethod(bean, req.operation());
+    //         Object[] args = bindArgs(method, req.params(), req.requestId());
+    //         Object result = method.invoke(bean, args);
+    //         if (result instanceof ResponseEntity<?> re) {
+    //             log.debug("Service returned ResponseEntity directly");
+    //             return re;
+    //         }
+    //         // Optionally wrap in your standard envelope:
+    //         log.debug("Service returned: {}", result);
+    //         return ResponseEntity.ok(ServiceResponse.ok(result, req.requestId()));
+    //     } catch (NoSuchElementException e) {
+    //         log.warn("Not found: {}", e.getMessage());
+    //         return badRequest("not_found", e.getMessage(), req.requestId());
+    //     } catch (BrokerValidationException e) {
+    //         log.warn("Validation error: {}", e.getErrors());
+    //         return ResponseEntity.badRequest().body(
+    //                 ServiceResponse.error(e.getErrors(), e.getRequestId()));
+    //     } catch (IllegalArgumentException e) {
+    //         log.warn("Binding error: {}", e.getMessage());
+    //         return badRequest("binding_error", e.getMessage(), req.requestId());
+    //     } catch (InvocationTargetException e) {
+    //         Throwable cause = e.getTargetException();
+    //         log.error("Service error: {}", cause.getMessage(), cause);
+    //         return serverError("service_error", cause.getClass().getSimpleName() + ": " + cause.getMessage(), req.requestId());
+    //     } catch (IllegalAccessException | RuntimeException e) {
+    //         log.error("Broker error: {}", e.getMessage(), e);
+    //         return serverError("broker_error", e.getMessage(), req.requestId());
+    //     }
+    // }
+    public ServiceResponse<?> invoke(ServiceRequest req) {
+        log.info("Invoking service: {}, operation: {}, requestId: {}",
+                req.service(), req.operation(), req.requestId());
         try {
             Object bean = resolveBean(req.service());
             Method method = resolveMethod(bean, req.operation());
@@ -58,30 +94,48 @@ public class ServiceBroker {
 
             Object result = method.invoke(bean, args);
 
+            // If a service method tries to return ResponseEntity, unwrap it
             if (result instanceof ResponseEntity<?> re) {
-                log.debug("Service returned ResponseEntity directly");
-                return re;
+                log.debug("Service returned ResponseEntity directly, unwrapping body");
+                return ServiceResponse.ok(re.getBody(), req.requestId());
             }
-            // Optionally wrap in your standard envelope:
+
             log.debug("Service returned: {}", result);
-            return ResponseEntity.ok(ServiceResponse.ok(result, req.requestId()));
+            return ServiceResponse.ok(result, req.requestId());
+
         } catch (NoSuchElementException e) {
             log.warn("Not found: {}", e.getMessage());
-            return badRequest("not_found", e.getMessage(), req.requestId());
+            return ServiceResponse.error(List.of(Map.of(
+                    "code", "not_found",
+                    "message", e.getMessage()
+            )), req.requestId());
+
         } catch (BrokerValidationException e) {
             log.warn("Validation error: {}", e.getErrors());
-            return ResponseEntity.badRequest().body(
-                    ServiceResponse.error(e.getErrors(), e.getRequestId()));
+            return ServiceResponse.error(e.getErrors(), e.getRequestId());
+
         } catch (IllegalArgumentException e) {
             log.warn("Binding error: {}", e.getMessage());
-            return badRequest("binding_error", e.getMessage(), req.requestId());
+            return ServiceResponse.error(List.of(Map.of(
+                    "code", "binding_error",
+                    "message", e.getMessage()
+            )), req.requestId());
+
         } catch (InvocationTargetException e) {
             Throwable cause = e.getTargetException();
             log.error("Service error: {}", cause.getMessage(), cause);
-            return serverError("service_error", cause.getClass().getSimpleName() + ": " + cause.getMessage(), req.requestId());
+            return ServiceResponse.error(List.of(Map.of(
+                    "code", "service_error",
+                    "type", cause.getClass().getSimpleName(),
+                    "message", cause.getMessage()
+            )), req.requestId());
+
         } catch (IllegalAccessException | RuntimeException e) {
             log.error("Broker error: {}", e.getMessage(), e);
-            return serverError("broker_error", e.getMessage(), req.requestId());
+            return ServiceResponse.error(List.of(Map.of(
+                    "code", "broker_error",
+                    "message", e.getMessage()
+            )), req.requestId());
         }
     }
 
@@ -209,7 +263,9 @@ public class ServiceBroker {
 
     private boolean hasAnnotation(Parameter p, Class<? extends Annotation> a) {
         for (Annotation an : p.getAnnotations()) {
-            if (an.annotationType().equals(a)) return true;
+            if (an.annotationType().equals(a)) {
+                return true;
+            }
         }
         return false;
     }

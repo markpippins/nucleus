@@ -10,9 +10,9 @@
     </parent>
 
 	<groupId>com.angrysurfer.spring</groupId>
-	<artifactId>broker-annotations</artifactId>
+	<artifactId>broker-spi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>broker-annotations</name>
+	<name>broker-spi</name>
 	<description>Service Broker Sandbox</description>
 	<url />
 	<licenses>

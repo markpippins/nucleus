@@ -20,7 +20,6 @@ import com.angrysurfer.spring.broker.service.ServiceBroker;
 import com.angrysurfer.spring.upload.service.UploadService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @RestController
 @RequestMapping("/api/upload")
 public class UploadController {
@@ -60,7 +59,7 @@ public class UploadController {
             Path path = uploadService.saveUploadedFile(file);
             params.put("filePath", path);
             log.info("File saved at: {}", path);
-            return broker.invoke(new ServiceRequest(service, operation, params, null));
+            return ResponseEntity.ok(broker.invoke(new ServiceRequest(service, operation, params, null)));
         } catch (IOException e) {
             log.error("Error saving file: {}", file.getOriginalFilename(), e);
             return ResponseEntity.badRequest().body("Error saving file");
