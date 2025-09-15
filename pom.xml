@@ -13,7 +13,8 @@
         <module>broker-annotations</module>
         <module>broker</module>
         <module>boot</module>
-        <module>service-user</module>
+        <module>upload</module>
+        <module>user</module>
     </modules>
 
     <properties>

@@ -3,7 +3,6 @@ package com.angrysurfer.spring.broker.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,17 +14,17 @@ import com.angrysurfer.spring.broker.core.ServiceBroker;
 // @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/broker")
-public class ServiceController {
+public class BrokerController {
 
-    private static final Logger log = LoggerFactory.getLogger(ServiceController.class);
+    private static final Logger log = LoggerFactory.getLogger(BrokerController.class);
 
     private final ServiceBroker broker;
 
     // final private FileService fileService;
 
-    public ServiceController(ServiceBroker broker) {
+    public BrokerController(ServiceBroker broker) {
         this.broker = broker;
-        log.info("ServiceController initialized");
+        log.info("BrokerController initialized");
     }
 
     // public ServiceController(ServiceBroker broker, FileService fileService) {
