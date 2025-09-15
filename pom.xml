@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>annotations-service-broker</module>
-        <module>service-broker</module>
-        <module>services-web</module>
+        <module>broker-annotations</module>
+        <module>broker</module>
+        <module>boot</module>
         <module>service-user</module>
     </modules>
 
