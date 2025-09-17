@@ -28,8 +28,8 @@ public class BrokerController {
     }
 
 
-    @PostMapping(value = "/requestService", consumes = {"application/json"})
-    public ResponseEntity<?> requestService(@RequestBody ServiceRequest request) {
+    @PostMapping(value = "/submitRequest", consumes = {"application/json"})
+    public ResponseEntity<?> submitRequest(@RequestBody ServiceRequest request) {
         log.debug("Received request: {}", request);
 
         ServiceResponse<?> response = broker.invoke(request);

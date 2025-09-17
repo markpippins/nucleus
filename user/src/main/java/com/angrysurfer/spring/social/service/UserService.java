@@ -89,6 +89,30 @@ public class UserService {
 		throw new ResourceNotFoundException("User ".concat(alias).concat(" not found."));
 	}
 
+	public UserDTO findByEmail(String email) throws ResourceNotFoundException {
+
+		UserDTO result;
+
+		Optional<User> user = userRepository.findByEmail(email);
+		if (user.isPresent()) {
+			Optional< Profile > profile = profileRepository.findByUserId(user.get().getId());
+			if (profile.isPresent()) {
+				result = UserDTO.fromUser(user.get());
+				result.setProfileImageUrl(profile.get().getProfileImageUrl());
+			} else {
+				result = UserDTO.fromUser(user.get());
+			}
+
+			return result;
+		}
+		throw new ResourceNotFoundException("User ".concat(email).concat(" not found."));
+	}
+
+	@BrokerOperation("save")
+	public UserDTO save(@BrokerParam("alias") String alias, @BrokerParam("email") String email, @BrokerParam("password") String initialPassword) {
+		return UserDTO.fromUser(userRepository.save(new User(alias, email, null)));
+	}
+
 	public UserDTO save(UserDTO newUser) {
 		return UserDTO.fromUser(userRepository.save(User.fromDTO(newUser)));
 	}

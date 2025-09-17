@@ -36,8 +36,8 @@ public class UploadController {
         log.info("UploadController initialized");
     }
 
-    @PostMapping(value = "/requestServiceWithFile", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> requestServiceWithFile(
+    @PostMapping(value = "/submitRequestWithFile", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> submitRequestWithFile(
             @RequestParam("service") String service,
             @RequestParam("operation") String operation,
             @RequestParam(value = "params", required = false) String paramsJson,
