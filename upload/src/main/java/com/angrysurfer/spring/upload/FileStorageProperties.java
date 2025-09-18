@@ -1,4 +1,4 @@
-package com.angrysurfer.spring.upload.config;
+package com.angrysurfer.spring.upload;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.angrysurfer.spring.upload.error;
+package com.angrysurfer.spring.upload;
 
 public class LogError {
     private final int lineNumber;

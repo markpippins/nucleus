@@ -1,4 +1,4 @@
-package com.angrysurfer.spring.upload.error;
+package com.angrysurfer.spring.upload;
 
 import java.io.BufferedReader;
 import java.io.IOException;
