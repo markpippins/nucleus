@@ -41,6 +41,7 @@ public class UploadController {
             @RequestParam("service") String service,
             @RequestParam("operation") String operation,
             @RequestParam(value = "params", required = false) String paramsJson,
+            @RequestParam("requestId") String requestId,
             @RequestPart("file") MultipartFile file) {
 
         log.info("Received file upload for service: {}, operation: {}, file: {}", service, operation, file.getOriginalFilename());
@@ -61,7 +62,8 @@ public class UploadController {
             Path path = uploadService.saveUploadedFile(file);
             params.put("filePath", path);
             log.info("File saved at: {}", path);
-            response = broker.invoke(new ServiceRequest(service, operation, params, null));
+            response = broker.invoke(new ServiceRequest(service, operation, params, requestId));
+
             return ResponseEntity.ok(response);
         } catch (IOException e) {
             log.error("Error saving file: {}", file.getOriginalFilename(), e);

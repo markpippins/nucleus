@@ -54,7 +54,7 @@ public class UploadService {
     }
 
     @BrokerOperation("processFile")
-    public void processFile(Path filePath) {
+    public String processFile(Path filePath) {
         log.info("Processing file: {}", filePath);
         if (!Files.exists(filePath)) {
             log.error("File not found: {}", filePath);
@@ -73,11 +73,14 @@ public class UploadService {
                 List<LogError> errors = LogParser.parseLogFile(logPath, keywords);
 
                 errors.forEach(error -> log.warn("Log error found: {}", error));
+                return logPath.toString().substring(3);
             } catch (IOException e) {
                 log.error("Error processing log file: {}", filePath, e);
                 e.printStackTrace();
             }
         }
+
+        return filePath.toString().substring(3);
     }
 
     public Path moveToProcessed(Path filePath) throws IOException {
