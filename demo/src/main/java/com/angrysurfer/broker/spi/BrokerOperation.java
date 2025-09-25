@@ -1,13 +1,13 @@
-package com.angrysurfer.broker.spi;
+// package com.angrysurfer.broker.spi;
 
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+// import java.lang.annotation.ElementType;
+// import java.lang.annotation.Retention;
+// import java.lang.annotation.RetentionPolicy;
+// import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface BrokerOperation {
-    String value() default "";
-}
+// @Retention(RetentionPolicy.RUNTIME)
+// @Target(ElementType.METHOD)
+// public @interface BrokerOperation {
+//     String value() default "";
+// }

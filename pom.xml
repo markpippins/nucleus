@@ -12,9 +12,12 @@
     <modules>
         <!-- <module>annotations-service-broker</module>
         <module>service-broker</module>
-        <module>services-web</module>
-        <module>service-user</module> -->
-        <module>demo</module>
+        <module>services-web</module> -->
+        <module>broker-spi</module>
+        <module>user-api</module>
+        <module>user-service</module>
+        <module>upload</module>
+        <module>demo</module> 
     </modules>
 
     <properties>
@@ -31,6 +34,11 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.angrysurfer.spring</groupId>
+                <artifactId>broker-spi</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

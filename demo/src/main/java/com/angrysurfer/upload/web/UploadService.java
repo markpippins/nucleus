@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.angrysurfer.broker.spi.BrokerOperation;
+import com.angrysurfer.spring.broker.spi.BrokerOperation;
 import com.angrysurfer.upload.FileStorageProperties;
 import com.angrysurfer.upload.error.LogError;
 import com.angrysurfer.upload.error.LogParser;

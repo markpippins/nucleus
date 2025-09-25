@@ -23,8 +23,8 @@ import org.springframework.util.StringUtils;
 import com.angrysurfer.broker.api.ServiceRequest;
 import com.angrysurfer.broker.api.ServiceResponse;
 import com.angrysurfer.broker.exception.BrokerValidationException;
-import com.angrysurfer.broker.spi.BrokerOperation;
-import com.angrysurfer.broker.spi.BrokerParam;
+import com.angrysurfer.spring.broker.spi.BrokerOperation;
+import com.angrysurfer.spring.broker.spi.BrokerParam;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.ConstraintViolation;
