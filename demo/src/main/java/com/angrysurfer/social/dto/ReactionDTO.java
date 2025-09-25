@@ -2,7 +2,7 @@ package com.angrysurfer.social.dto;
 
 import java.io.Serializable;
 
-import com.angrysurfer.social.model.Reaction;
+
 
 public class ReactionDTO implements Serializable {
 
@@ -43,13 +43,5 @@ public class ReactionDTO implements Serializable {
 
     public ReactionDTO() {
 
-    }
-
-    public static ReactionDTO fromReaction(Reaction reaction) {
-        ReactionDTO result = new ReactionDTO();
-        result.setId(reaction.getId());
-        result.setType(reaction.getReactionType().toString());
-        result.setAlias(reaction.getUser().getAlias());
-        return result;
     }
 }

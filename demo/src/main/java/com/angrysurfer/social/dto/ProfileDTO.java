@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.angrysurfer.social.model.Profile;
+
 
 public class ProfileDTO implements Serializable {
 
@@ -29,18 +29,6 @@ public class ProfileDTO implements Serializable {
 
     public ProfileDTO() {
 
-    }
-
-    public static ProfileDTO fromProfile(Profile profile) {
-        ProfileDTO result = new ProfileDTO();
-
-        result.setId(profile.getId());
-        result.setFirstName(profile.getFirstName());
-        result.setLastName(profile.getLastName());
-        result.setCity(profile.getCity());
-        result.setState(profile.getState());
-
-        return result;
     }
 
     public Long getId() {

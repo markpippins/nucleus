@@ -14,6 +14,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 
+import com.angrysurfer.social.dto.ProfileDTO;
+
 @Entity(name = "Profile")
 public class Profile implements Serializable {
 
@@ -43,6 +45,18 @@ public class Profile implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Interest> interests = new HashSet<>();
+
+    public ProfileDTO toDTO() {
+        ProfileDTO dto = new ProfileDTO();
+        dto.setId(getId());
+        dto.setFirstName(getFirstName());
+        dto.setLastName(getLastName());
+        dto.setCity(getCity());
+        dto.setState(getState());
+        dto.setProfileImageUrl(getProfileImageUrl());
+        getInterests().forEach(interest -> dto.getInterests().add(interest.getName()));
+        return dto;
+    }
 
     public void setUser(User user) {
         this.user = user;

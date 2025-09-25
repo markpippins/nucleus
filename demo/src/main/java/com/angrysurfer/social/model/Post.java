@@ -16,6 +16,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 
+import com.angrysurfer.social.dto.PostDTO;
+import com.angrysurfer.social.dto.PostStatDTO;
+import java.util.stream.Collectors;
+
 @Entity(name = "Post")
 public class Post extends AbstractContent {
 
@@ -41,6 +45,29 @@ public class Post extends AbstractContent {
     private String sourceUrl;
 
     private String title;
+
+
+
+    public PostDTO toDTO() {
+        PostDTO dto = new PostDTO();
+        dto.setId(getId());
+        dto.setText(getText());
+        dto.setPostedBy(getPostedBy().getAlias());
+        dto.setForumId(getForumId());
+        if (getPostedTo() != null) {
+            dto.setPostedTo(getPostedTo().getAlias());
+        }
+        dto.setReplies(getReplies().stream().map(r -> r.toDTO()).collect(Collectors.toSet()));
+        dto.setReactions(getReactions().stream().map(r -> r.toDTO()).collect(Collectors.toSet()));
+        return dto;
+    }
+
+    public PostStatDTO toStatDTO() {
+        PostStatDTO dto = new PostStatDTO();
+        dto.setId(getId());
+        dto.setRating(getRating());
+        return dto;
+    }
 
     public Long getId() {
         return id;

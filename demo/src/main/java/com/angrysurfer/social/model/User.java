@@ -18,6 +18,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 
+import java.util.stream.Collectors;
+
 @Entity(name = "User")
 public class User implements Serializable {
 
@@ -52,6 +54,18 @@ public class User implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<User> friends = new HashSet<>();
 
+	public UserDTO toDTO() {
+		UserDTO dto = new UserDTO();
+		dto.setId(getId());
+		dto.setAlias(getAlias());
+		dto.setEmail(getEmail());
+		dto.setAvatarUrl(getAvatarUrl());
+		dto.setFollowers(getFollowers().stream().map(f -> f.getAlias()).collect(Collectors.toSet()));
+		dto.setFollowing(getFollowing().stream().map(f -> f.getAlias()).collect(Collectors.toSet()));
+		dto.setFriends(getFriends().stream().map(f -> f.getAlias()).collect(Collectors.toSet()));
+		return dto;
+	}
+
 	public User() {
 
 	}
@@ -62,9 +76,7 @@ public class User implements Serializable {
 		setAvatarUrl(avatarUrl);
 	}
 
-	public static User fromDTO(UserDTO newUser) {
-		return new User(newUser.getAlias(), newUser.getEmail(), newUser.getAvatarUrl());
-	}
+
 
     public Long getId() {
         return id;

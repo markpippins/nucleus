@@ -17,6 +17,10 @@ import jakarta.persistence.SequenceGenerator;
 
 
 
+import java.util.stream.Collectors;
+
+import com.angrysurfer.social.dto.CommentDTO;
+
 @Entity
 //@Table(schema = "social")
 public class Comment extends AbstractContent {
@@ -54,6 +58,20 @@ public class Comment extends AbstractContent {
 	@JoinTable(name = "comment_edit", joinColumns = { @JoinColumn(name = "edit_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "comment_id") })
 	private Set<Edit> edits = new HashSet<>();
+
+    public CommentDTO toDTO() {
+        CommentDTO dto = new CommentDTO();
+        dto.setId(getId());
+        dto.setText(getText());
+        dto.setPostedBy(getPostedBy().getAlias());
+        dto.setPostId(getPost().getId());
+        if (getParent() != null) {
+            dto.setParentId(getParent().getId());
+        }
+        dto.setReplies(getReplies().stream().map(r -> r.toDTO()).collect(Collectors.toSet()));
+        dto.setReactions(getReactions().stream().map(r -> r.toDTO()).collect(Collectors.toSet()));
+        return dto;
+    }
 
 	public Long getId() {
 		return id;

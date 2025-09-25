@@ -13,6 +13,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 
+import com.angrysurfer.social.dto.ForumDTO;
+import com.angrysurfer.social.dto.UserDTO;
+
 @Entity
 public class Forum implements Serializable {
 
@@ -28,6 +31,14 @@ public class Forum implements Serializable {
     private Long id;
 
     private String name;
+
+    public ForumDTO toDTO() {
+        ForumDTO dto = new ForumDTO();
+        dto.setId(getId());
+        dto.setName(getName());
+        getMembers().forEach(member -> dto.getMembers().add(member.toDTO()));
+        return dto;
+    }
 
     public Long getId() {
         return id;

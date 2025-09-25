@@ -74,14 +74,14 @@ public class UserService {
         log.info("Find all users");
         HashSet<User> result = new HashSet<>();
         userRepository.findAll().forEach(result::add);
-        return result.stream().map(user -> UserDTO.fromUser(user)).collect(Collectors.toSet());
+        return result.stream().map(user -> user.toDTO()).collect(Collectors.toSet());
     }
 
     public UserDTO findById(Long userId) throws ResourceNotFoundException {
         log.info("Find user by id {}", userId);
         Optional<User> result = userRepository.findById(userId);
         if (result.isPresent()) {
-            return UserDTO.fromUser(result.get());
+            return result.get().toDTO();
         }
 
         throw new ResourceNotFoundException("User ".concat(Long.toString(userId).concat(" not found.")));
@@ -95,10 +95,10 @@ public class UserService {
         if (user.isPresent()) {
             Optional<Profile> profile = profileRepository.findByUserId(user.get().getId());
             if (profile.isPresent()) {
-                result = UserDTO.fromUser(user.get());
+                result = user.get().toDTO();
                 result.setProfileImageUrl(profile.get().getProfileImageUrl());
             } else {
-                result = UserDTO.fromUser(user.get());
+                result = user.get().toDTO();
             }
 
             return result;
@@ -115,10 +115,10 @@ public class UserService {
         if (user.isPresent()) {
             Optional<Profile> profile = profileRepository.findByUserId(user.get().getId());
             if (profile.isPresent()) {
-                result = UserDTO.fromUser(user.get());
+                result = user.get().toDTO();
                 result.setProfileImageUrl(profile.get().getProfileImageUrl());
             } else {
-                result = UserDTO.fromUser(user.get());
+                result = user.get().toDTO();
             }
 
             return result;
@@ -126,20 +126,20 @@ public class UserService {
         throw new ResourceNotFoundException("User ".concat(email).concat(" not found."));
     }
 
-    @BrokerOperation("save")
     public UserDTO save(@BrokerParam("alias") String alias, @BrokerParam("email") String email, @BrokerParam("password") String initialPassword) {
         log.info("Save user {}", alias);
-        return UserDTO.fromUser(userRepository.save(new User(alias, email, null)));
+        return userRepository.save(new User(alias, email, null)).toDTO();
     }
 
     public UserDTO save(UserDTO newUser) {
         log.info("Save user {}", newUser.getAlias());
-        return UserDTO.fromUser(userRepository.save(User.fromDTO(newUser)));
+        User user = new User(newUser.getAlias(), newUser.getEmail(), newUser.getAvatarUrl());
+        return userRepository.save(user).toDTO();
     }
 
     public UserDTO update(User user) {
         log.info("Update user {}", user.getAlias());
-        return UserDTO.fromUser(userRepository.save(user));
+        return userRepository.save(user).toDTO();
     }
 
 }

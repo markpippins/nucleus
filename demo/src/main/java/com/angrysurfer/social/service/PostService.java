@@ -57,7 +57,7 @@ public class PostService {
         log.info("Find post by id {}", postId);
         Optional<Post> result = postRepository.findById(postId);
         if (result.isPresent())
-            return new PostDTO(result.get());
+            return result.get().toDTO();
 
         throw new ResourceNotFoundException(POST.concat(Long.toString(postId).concat(NOT_FOUND)));
     }
@@ -69,7 +69,7 @@ public class PostService {
 
     public Set<PostDTO> findAll() {
         log.info("Find all posts");
-        return postRepository.findAll().stream().map(PostDTO::new).collect(Collectors.toSet());
+        return postRepository.findAll().stream().map(p -> p.toDTO()).collect(Collectors.toSet());
     }
 
     public PostDTO save(User postedBy, String text) {
@@ -78,12 +78,12 @@ public class PostService {
         post.setPostedBy(postedBy);
         post.setText(text);
 
-        return new PostDTO(postRepository.save(post));
+        return postRepository.save(post).toDTO();
     }
 
     public PostDTO save(User postedBy, User postedTo, String text) {
         log.info("Save post by user {} to user {}", postedBy.getAlias(), postedTo.getAlias());
-        return new PostDTO(postRepository.save(new Post(postedBy, postedTo, text)));
+        return postRepository.save(new Post(postedBy, postedTo, text)).toDTO();
     }
 
     public PostDTO save(User postedBy, Long forumId, String text) {
@@ -93,7 +93,7 @@ public class PostService {
         post.setForumId(forumId);
         post.setText(text);
 
-        return new PostDTO(postRepository.save(post));
+        return postRepository.save(post).toDTO();
     }
 
     public PostDTO save(PostDTO post) {
@@ -131,7 +131,7 @@ public class PostService {
 
     public PostDTO save(Post post) {
         log.info("Save post {}", post.getId());
-        return new PostDTO(postRepository.save(post));
+        return postRepository.save(post).toDTO();
     }
 
     public PostDTO update(Post post, String change) {
@@ -142,7 +142,7 @@ public class PostService {
         post.setText(change);
         post.getEdits().add(edit);
 
-        return new PostDTO(postRepository.save(post));
+        return postRepository.save(post).toDTO();
     }
 
     public PostStatDTO incrementRating(Long postId) throws ResourceNotFoundException {
@@ -153,7 +153,7 @@ public class PostService {
             post.setRating(post.getRating() + 1);
             postRepository.save(post);
 
-            return new PostStatDTO(post);
+            return post.toStatDTO();
         }
 
         throw new ResourceNotFoundException(POST.concat(Long.toString(postId).concat(NOT_FOUND)));
@@ -167,7 +167,7 @@ public class PostService {
             post.setRating(post.getRating() - 1);
             postRepository.save(post);
 
-            return new PostStatDTO(post);
+            return post.toStatDTO();
         }
 
         throw new ResourceNotFoundException(POST.concat(Long.toString(postId).concat(NOT_FOUND)));
@@ -188,7 +188,7 @@ public class PostService {
             post.getReactions().add(reaction);
             postRepository.save(post);
 
-            return ReactionDTO.fromReaction(reaction);
+            return reaction.toDTO();
         }
 
         throw new ResourceNotFoundException(POST.concat(Long.toString(postId).concat(NOT_FOUND)));

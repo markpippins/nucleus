@@ -48,7 +48,7 @@ public class CommentService {
         log.info("Find comment by id {}", commentId);
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isPresent()) {
-            return new CommentDTO(comment.get());
+            return comment.get().toDTO();
         }
 
         throw new ResourceNotFoundException(" comment ".concat(commentId.toString()).concat(" not found."));
@@ -56,17 +56,17 @@ public class CommentService {
 
     public Iterable<CommentDTO> findAll() {
         log.info("Find all comments");
-        return commentRepository.findAll().stream().map(CommentDTO::new).collect(Collectors.toSet());
+        return commentRepository.findAll().stream().map(c -> c.toDTO()).collect(Collectors.toSet());
     }
 
     public CommentDTO save(Comment n) {
         log.info("Saving comment {}", n.getId());
-        return new CommentDTO(commentRepository.save(n));
+        return commentRepository.save(n).toDTO();
     }
 
     public CommentDTO save(User postedBy, String text) {
         log.info("Saving comment by user {}", postedBy.getAlias());
-        return new CommentDTO(commentRepository.save(new Comment(postedBy, text)));
+        return commentRepository.save(new Comment(postedBy, text)).toDTO();
     }
 
     public Iterable<Comment> findCommentsForPost(Long postId) {
@@ -105,7 +105,7 @@ public class CommentService {
             post.getReplies().add(result);
             postRepository.save(post);
 
-            return new CommentDTO(post, result);
+            return result.toDTO();
         }
 
         throw new IllegalArgumentException();
@@ -123,7 +123,7 @@ public class CommentService {
             parent.getReplies().add(result);
             save(parent);
 
-            return new CommentDTO(result, parent.getId(), parent.getPostedBy().getAlias());
+            return result.toDTO();
         }
 
         throw new IllegalArgumentException();
@@ -146,7 +146,7 @@ public class CommentService {
         comment.getReactions().add(reaction);
         commentRepository.save(comment);
 
-        return ReactionDTO.fromReaction(reaction);
+        return reaction.toDTO();
     }
 
     public void removeReaction(Long commentId, ReactionDTO reactionDTO) {

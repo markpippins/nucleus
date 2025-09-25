@@ -12,11 +12,6 @@ public class PostStatDTO {
 
     }
 
-    public PostStatDTO(Post post) {
-        this.setId(post.getId());
-        this.setRating(post.getRating());
-    }
-
     public Long getId() {
         return id;
     }

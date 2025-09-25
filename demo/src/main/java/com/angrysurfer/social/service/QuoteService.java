@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class QuoteService {
 
-    private static final Logger log = LoggerFactory.getLogger(QuoteService.class);
+
 
     public QuoteService() {
         log.info("QuoteService initialized");

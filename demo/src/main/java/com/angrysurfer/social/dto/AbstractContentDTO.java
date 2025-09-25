@@ -30,19 +30,6 @@ abstract class AbstractContentDTO {
 
     }
 
-    AbstractContentDTO(IContent content) {
-        this.setId(content.getId());
-        this.setUrl(content.getUrl());
-        this.setPostedBy(content.getPostedBy().getAlias());
-        this.setPostedDate(content.getPostedDate());
-        this.setRating(content.getRating());
-        this.setReactions(content.getReactions().stream().map(reaction -> ReactionDTO.fromReaction(reaction))
-                .collect(Collectors.toSet()));
-        this.setReplies(content.getReplies().stream().map(comment -> new CommentDTO(content, comment))
-                .collect(Collectors.toSet()));
-        this.setText(content.getText());
-    }
-
     public Long getId() {
         return id;
     }

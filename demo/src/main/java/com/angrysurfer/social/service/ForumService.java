@@ -33,7 +33,7 @@ public class ForumService {
         log.info("Find forum by id {}", forumId);
         Optional<Forum> forum = forumRepository.findById(forumId);
         if (forum.isPresent()) {
-            return ForumDTO.fromForum(forum.get());
+            return forum.get().toDTO();
         }
 
         throw new ResourceNotFoundException("forum ".concat(forumId.toString()).concat(" not found."));
@@ -42,24 +42,24 @@ public class ForumService {
 
     public Iterable<ForumDTO> findAll() {
         log.info("Find all forums");
-        return forumRepository.findAll().stream().map(forum -> ForumDTO.fromForum(forum)).collect(Collectors.toSet());
+        return forumRepository.findAll().stream().map(forum -> forum.toDTO()).collect(Collectors.toSet());
     }
 
     public ForumDTO save(String name) {
         log.info("Save forum {}", name);
-        return ForumDTO.fromForum(forumRepository.save(new Forum(name)));
+        return forumRepository.save(new Forum(name)).toDTO();
     }
 
     public ForumDTO save(Forum forum) {
         log.info("Save forum {}", forum.getName());
-        return ForumDTO.fromForum(forumRepository.save(forum));
+        return forumRepository.save(forum).toDTO();
     }
 
     public ForumDTO findByName(String name) throws ResourceNotFoundException {
         log.info("Find forum by name {}", name);
         Optional<Forum> forum = forumRepository.findByName(name);
         if (forum.isPresent()) {
-            return ForumDTO.fromForum(forum.get());
+            return forum.get().toDTO();
         }
 
         throw new ResourceNotFoundException("forum ".concat(name).concat(" not found."));

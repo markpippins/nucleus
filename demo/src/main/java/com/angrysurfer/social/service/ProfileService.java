@@ -27,7 +27,7 @@ public class ProfileService {
         log.info("Find profile by user id {}", userId);
         Optional<Profile> profile = profileRepository.findByUserId(userId);
         if (profile.isPresent())
-            return ProfileDTO.fromProfile(profile.get());
+            return profile.get().toDTO();
 
         throw new ResourceNotFoundException("Profile not found.");
     }
@@ -38,7 +38,7 @@ public class ProfileService {
         return "redirect:/user/all";
     }
 
-    public Profile save(User user, String firstName, String lastName) {
+    public ProfileDTO save(User user, String firstName, String lastName) {
         log.info("Save profile for user {}", user.getAlias());
         Profile p = new Profile();
 
@@ -46,7 +46,7 @@ public class ProfileService {
         p.setFirstName(firstName);
         p.setLastName(lastName);
 
-        return profileRepository.save(p);
+        return profileRepository.save(p).toDTO();
     }
 
 }

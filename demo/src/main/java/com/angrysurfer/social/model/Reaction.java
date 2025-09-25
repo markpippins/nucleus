@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.angrysurfer.social.dto.ReactionDTO;
+
 //@Table(schema = "social")
 @Entity(name = "Reaction")
 public class Reaction implements Serializable {
@@ -14,6 +16,14 @@ public class Reaction implements Serializable {
      *
      */
     private static final long serialVersionUID = -2157436062288147245L;
+
+    public ReactionDTO toDTO() {
+        ReactionDTO dto = new ReactionDTO();
+        dto.setId(getId());
+        dto.setType(getReactionType().toString());
+        dto.setAlias(getUser().getAlias());
+        return dto;
+    }
 
     public Long getId() {
         return id;
