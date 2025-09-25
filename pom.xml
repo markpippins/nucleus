@@ -10,10 +10,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>annotations-service-broker</module>
+        <!-- <module>annotations-service-broker</module>
         <module>service-broker</module>
         <module>services-web</module>
-        <module>service-user</module>
+        <module>service-user</module> -->
+        <module>demo</module>
     </modules>
 
     <properties>
